@@ -1,0 +1,77 @@
+﻿<Window x:Class="TrekWoAProductsPortal.Dashboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrekWoAProductsPortal"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Row="0" Grid.Column="0"></Image>
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <TextBlock x:Name="txtName" Text="Product Name"/>
+            <TextBlock x:Name="txtPrice" Text="$45.00"/>
+        </StackPanel>
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="0" Grid.Column="2">
+            <Button x:Name="btnEdit" Style="{StaticResource EditButtonStyle}" Content="Edit" />
+            <Button x:Name="btnDelete" Style="{StaticResource DeleteButtonStyle}" Content="Delete" />
+        </StackPanel>-->
+        <ItemsControl x:Name="productsList">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding src}"></Image>
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="0" Grid.Column="2">
+                            <TextBlock x:Name="txtName" Text="{Binding title, Mode=TwoWay}"/>
+                            <TextBlock x:Name="txtPrice" Text="{Binding price, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="0" Grid.Column="2">
+                            <Button x:Name="btnEdit" Style="{StaticResource EditButtonStyle}" Content="Edit" />
+                            <Button x:Name="btnDelete" Style="{StaticResource DeleteButtonStyle}" Content="Delete" />
+                        </StackPanel>
+                    </StackPanel>
+                    <!---->
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Style.Setters>
+                        <Setter Property="Grid.Row" Value="{Binding MyRow}" />
+                        <Setter Property="Grid.Column" Value="{Binding MyColumn}" />
+                    </Style.Setters>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+    </Grid>
+
+</Window>
