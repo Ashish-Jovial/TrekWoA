@@ -60,6 +60,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HelperClasses\ShopifyRequests.cs" />
+    <Compile Include="UserControl\AddProduct.xaml.cs">
+      <DependentUpon>AddProduct.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ProductViewModel.cs" />
     <Page Include="Dashboard.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -73,6 +76,10 @@
       <DependentUpon>Dashboard.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControl\AddProduct.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ProductModel.cs" />
@@ -101,15 +108,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\refresh.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\trek_emonda.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

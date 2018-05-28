@@ -24,6 +24,7 @@ namespace TrekWoAProductsPortal
     /// </summary>
     public partial class Dashboard : Window
     {
+        Window darkWindow = null;
         App thisApp = (App)Application.Current;
         public ObservableCollection<ProductModel> ProductsCollection
         { get { return thisApp.productsCollection; } }
@@ -68,7 +69,46 @@ namespace TrekWoAProductsPortal
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
+           // MakeDarkWindow(true);
+            popupProduct.IsOpen = true;
 
+        }
+
+        private void AddProduct_ClosePopup(object sender, EventArgs e)
+        {
+            //MakeDarkWindow(false);
+            popupProduct.IsOpen = false;
+            addProductControl.productName = "";
+            addProductControl.productPrice = "";
+        }
+        public void MakeDarkWindow(bool status)
+        {
+            darkWindow = new Window()
+            {
+                Background = Brushes.Black,
+                Opacity = 0.7,
+                AllowsTransparency = true,
+                WindowStyle = WindowStyle.None,
+                Height = this.Height,
+                Width = this.Width,
+                Topmost = true
+            };
+            if (status == true)
+            {
+                darkWindow.Show();
+            }
+            else
+            {
+                darkWindow.Topmost = false;
+                darkWindow.Close();
+            }
+        }
+
+        private void addProductControl_NewProduct(object sender, EventArgs e)
+        {
+            // Step 1, call product POST API here.
+            // Step 2, wait for response.
+            // Step 3, response received update the observableCollection with new data.
         }
     }
 }

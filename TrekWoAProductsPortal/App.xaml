@@ -42,7 +42,7 @@
             <Setter Property="Foreground" Value="#E55428"></Setter>
             <Setter Property="Height" Value="37"></Setter>
             <Setter Property="Width" Value="115"></Setter>
-            <Setter Property="FontFamily" Value="Arial"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI"></Setter>
             <Setter Property="FontSize" Value="14"></Setter>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
@@ -54,13 +54,25 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsFocused" Value="True"/>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="#E55428"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Style.Triggers>
         </Style>
-        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+        <Style x:Key="ActionButtons" TargetType="Button">
             <Setter Property="Background" Value="#E55428"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
             <Setter Property="Height" Value="37"></Setter>
             <Setter Property="Width" Value="115"></Setter>
-            <Setter Property="FontFamily" Value="Arial"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI"></Setter>
             <Setter Property="FontSize" Value="14"></Setter>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
@@ -73,6 +85,49 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsFocused" Value="True"/>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Foreground" Value="#E55428"/>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#E55428"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="Height" Value="37"></Setter>
+            <Setter Property="Width" Value="115"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid  Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" Margin="10,5"
+                        VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsFocused" Value="True"/>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <!--<Setter Property="Background" Value="White"/>
+                        <Setter Property="Foreground" Value="E55428"/>-->
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="DataLabel" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="18"/>
@@ -80,6 +135,17 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="TextBoxProductStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
     </Application.Resources>
 </Application>
