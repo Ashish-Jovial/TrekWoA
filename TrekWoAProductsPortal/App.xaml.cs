@@ -32,5 +32,10 @@ namespace TrekWoAProductsPortal
             }
             return fullUrl;
         }
+
+        private void EventTrigger_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+
+        }
     }
 }

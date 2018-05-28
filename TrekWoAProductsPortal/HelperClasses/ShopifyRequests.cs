@@ -27,15 +27,11 @@ namespace TrekWoAProductsPortal.HelperClasses
             {
                 dynamic shopify = new Shopify.Api(apiKey, password, storeUrl);
                 var selectQuery = shopify.Products();
-                if (selectQuery != null)
+                ProductModel records = selectQuery as ProductModel;
+                if (records != null)
                 {
-                    products = new TrekWoAProductsPortal.Model.ProductModel()
-                    {
-                        product = new Product()
-                        {
-
-                        }
-                    };
+                    products = new ProductModel();
+                    products = records;
                 }
             }
             catch(Exception x)

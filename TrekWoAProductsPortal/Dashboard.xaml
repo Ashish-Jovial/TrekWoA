@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrekWoAProductsPortal"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Shopify Products Portal" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid ScrollViewer.VerticalScrollBarVisibility="Auto">
         <!--<Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -29,7 +29,28 @@
             <Button x:Name="btnEdit" Style="{StaticResource EditButtonStyle}" Content="Edit" />
             <Button x:Name="btnDelete" Style="{StaticResource DeleteButtonStyle}" Content="Delete" />
         </StackPanel>-->
-        <ItemsControl x:Name="productsList" ItemsSource="{Binding ProductsCollection}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#E55428" Grid.ColumnSpan="2">
+            <Button Margin="10" x:Name="btnAddProduct" Style="{StaticResource RefreshButtonStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Click="btnAddProduct_Click">
+                <Image Source="C:\SourceCodes\WoA\TrekWoA\TrekWoAProductsPortal\Assets\add.png" Width="26" Height="26" />
+            </Button>
+
+            <TextBlock x:Name="txtProcessing" Visibility="Collapsed" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="segoe UI" FontSize="15" Foreground="White" Text="Processing..."/>
+
+            <Button Margin="10" x:Name="btnRefresh" Style="{StaticResource RefreshButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="30" Height="30" Click="btnRefresh_Click">
+                <Image Source="C:\SourceCodes\WoA\TrekWoA\TrekWoAProductsPortal\Assets\refresh.png" Width="26" Height="26" />
+            </Button>
+
+        </Grid>
+        <!--<ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="productsList" ItemsSource="{Binding ProductViewModel}">-->
+        <ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="productsList" ItemsSource="{Binding ProductsCollection}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -50,11 +71,13 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding src}"></Image>
+                    <StackPanel Orientation="Horizontal" Margin="5" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding src, Mode=TwoWay}"></Image>
                         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="0" Grid.Column="2">
-                            <TextBlock x:Name="txtName" Text="{Binding title, Mode=TwoWay}"/>
-                            <TextBlock x:Name="txtPrice" Text="{Binding price, Mode=TwoWay}"/>
+                            <!--<TextBlock x:Name="txtName" Text="{Binding title, Mode=TwoWay}"/>
+                            <TextBlock x:Name="txtPrice" Text="{Binding price, Mode=TwoWay}"/>-->
+                            <TextBlock Text="{Binding title, Mode=TwoWay}" Style="{DynamicResource DataLabel}"/>
+                            <TextBlock Text="{Binding price, Mode=TwoWay}" Style="{DynamicResource DataLabel}"/>
                         </StackPanel>
                         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="0" Grid.Column="2">
                             <Button x:Name="btnEdit" Style="{StaticResource EditButtonStyle}" Content="Edit" />

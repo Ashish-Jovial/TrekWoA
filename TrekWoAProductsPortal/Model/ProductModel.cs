@@ -543,6 +543,6 @@ namespace TrekWoAProductsPortal.Model
 
     public class ProductModel
     {
-        public Product product { get; set; }
+        public List<Product> product { get; set; }
     }
 }

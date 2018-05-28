@@ -4,6 +4,39 @@
              xmlns:local="clr-namespace:TrekWoAProductsPortal"
              StartupUri="Dashboard.xaml">
     <Application.Resources>
+        <Style x:Key="RefreshButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Ellipse Stroke="Green" StrokeThickness="1">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush>
+                                        <GradientStop Offset="0" Color="White" />
+                                        <GradientStop Offset="1" Color="White" />
+                                        <GradientStop Offset="1" Color="White" />
+                                        <RadialGradientBrush.Transform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="0.65" />
+                                            </TransformGroup>
+                                        </RadialGradientBrush.Transform>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="EditButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="White"></Setter>
             <Setter Property="Foreground" Value="#E55428"></Setter>
@@ -40,6 +73,13 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        <Style x:Key="DataLabel" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
     </Application.Resources>
 </Application>
