@@ -22,19 +22,30 @@ namespace TrekWoAProductsPortal.UserControl
     {
         public string productName;
         public string productPrice;
+        public string buttonStatus;
+        public string id;
         public event EventHandler ClosePopup;
         public event EventHandler NewProduct;
         public AddProduct()
         {
             InitializeComponent();
+            buttonStatus = "Add";
+            btnAddOrUpdate.Content = buttonStatus;
         }
 
         private void btnAddOrUpdate_Click(object sender, RoutedEventArgs e)
         {
             if (NewProduct != null)
+            {
+                productName = txtProductName.Text;
+                productPrice = txtProductPrice.Text;
                 NewProduct(this, e);
-        }
+            }
 
+        }
+        public void Destructor()
+        {
+        }
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             if (ClosePopup != null)
