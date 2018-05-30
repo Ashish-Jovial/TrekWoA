@@ -545,11 +545,14 @@ namespace TrekWoAProductsPortal.Model
     //{
     //    public List<Product> product { get; set; }
     //}
-    [DataContract(Name = "products")]
     public class Products : INotifyPropertyChanged
     {
-        [DataMember(Name = "product")]
-        public Product product { get; set; }
+        private product _product { get; set; }
+        public product product
+        {
+            get { return _product; }
+            set { _product = value; RaisePropertyChange("product"); }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChange(string propertyname)
@@ -560,13 +563,27 @@ namespace TrekWoAProductsPortal.Model
             }
         }
     }
-    [DataContract(Name = "product")]
-    public class Product : INotifyPropertyChanged
+    public class product : INotifyPropertyChanged
     {
-        [DataMember(Name = "title")]
-        public string Title { get; set; }
-        [DataMember(Name = "id")]
-        public string Id { get; set; }
+        private string _title { get; set; }
+        private string _id { get; set; }
+        public string title
+        {
+            get { return _title; }
+            set
+            {
+                _title = value; RaisePropertyChange("title");
+            }
+        }
+
+        public string id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value; RaisePropertyChange("id");
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChange(string propertyname)
         {

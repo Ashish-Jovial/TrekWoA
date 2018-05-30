@@ -17,8 +17,8 @@ namespace TrekWoAProductsPortal
         public readonly string stroe_url = "trek-bikes.myshopify.com";
         public readonly string api_key = "67b9a85c8758934ab576f76e0daec9cf";
         public readonly string password = "a5c2e67de6376e3cc76f54191155f93a";
-        public Product currentProduct;
-        public System.Collections.ObjectModel.ObservableCollection<Product> productsCollection = new System.Collections.ObjectModel.ObservableCollection<Product>();
+        public product currentProduct;
+        public System.Collections.ObjectModel.ObservableCollection<product> productsCollection = new System.Collections.ObjectModel.ObservableCollection<product>();
         public string GetFullUrl(string apiPath)
         {
             string fullUrl = "";

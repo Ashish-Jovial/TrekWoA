@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using TrekWoAProductsPortal.HelperClasses;
 using TrekWoAProductsPortal.Model;
 using TrekWoAProductsPortal.ViewModel;
@@ -24,131 +25,212 @@ namespace TrekWoAProductsPortal
     /// </summary>
     public partial class Dashboard : Window
     {
-        Product EditProduct = new Product();
+        public string Id = "";
+        product EditProduct = new product();
         Window darkWindow = null;
-        public int totalProducts = 0;
         App thisApp = (App)Application.Current;
-        public ObservableCollection<Product> ProductsCollection
+        public ObservableCollection<product> ProductsCollection
         { get { return thisApp.productsCollection; } }
+        #region Consturctor
         public Dashboard()
         {
             InitializeComponent();
-            LoadProducts();
-            CountProducts();
-            //Implementation of viewModel, ProductViewModel can be use.
-            //this.DataContext = new ProductViewModel();
+            btnAddOrUpdate.Content = "Add";
         }
-
-        private void CountProducts()
+        #endregion
+        #region API Calls
+        private async Task CountProducts()
         {
-            Product product = new Product();
-            int count = ShopifyRequests.GetProductCount(thisApp.api_key, thisApp.password, thisApp.GetFullUrl("/admin/products/count.json"));
+            product product = new product();
+            int count = ShopifyRequests.GetProductCount(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), "https://trek-bikes.myshopify.com/admin/products/count.json");
+            txtCount.Text = "Total Prducts : " + Convert.ToString(count);
         }
-
-        private void LoadProducts()
+        private async Task LoadProducts()
         {
-            List<Product> newRecords = new List<Product>();
+            List<product> newRecords = new List<product>();
+
             newRecords = ShopifyRequests.GetAllProducts(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""));
             if (newRecords != null)
             {
-                totalProducts = thisApp.productsCollection.Count();
+                thisApp.productsCollection.Clear();
+
                 foreach (var x in newRecords)
                 {
                     thisApp.productsCollection.Add(x);
                 }
             }
         }
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        private async Task UpdateProduct(Products product, int productIndex)
         {
-            LoadProducts();
-            CountProducts();
-        }
-        private void btnAddProduct_Click(object sender, RoutedEventArgs e)
-        {
-            // MakeDarkWindow(true);
-            popupProduct.IsOpen = true;
-        }
-        private void AddProduct_ClosePopup(object sender, EventArgs e)
-        {
-            //MakeDarkWindow(false);
-            popupProduct.IsOpen = false;
-            addProductControl.productName = "";
-            addProductControl.productPrice = "";
-        }
-        public void MakeDarkWindow(bool status)
-        {
-            darkWindow = new Window()
+            var updateRecrod = ShopifyRequests.UpdateProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), product);
+            if (updateRecrod != null)
             {
-                Background = Brushes.Black,
-                Opacity = 0.7,
-                AllowsTransparency = true,
-                WindowStyle = WindowStyle.None,
-                Height = this.Height,
-                Width = this.Width,
-                Topmost = true
-            };
-            if (status == true)
-            {
-                darkWindow.Show();
-            }
-            else
-            {
-                darkWindow.Topmost = false;
-                darkWindow.Close();
+                thisApp.productsCollection.RemoveAt(productIndex);
+                thisApp.productsCollection.Add(product.product);
+                //await InitialServerCall();
             }
         }
-        private void addProductControl_NewProduct(object sender, EventArgs e)
+        private async Task CreateProduct()
         {
-            // Step 1, call product POST API here.
-            // Step 2, wait for response.
-            // Step 3, response received update the observableCollection with new data.
             Products products = new Products()
             {
-                product = new Product()
+                product = new product()
                 {
-                    Title = addProductControl.productName,
+                    title = txtProductName.Text,
                 }
             };
             bool isCreated = ShopifyRequests.CreateProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), products);
             if (isCreated == true)
             {
-                //thisApp.productsCollection.Add(newProduct);
+                thisApp.productsCollection.Add(products.product);
             }
         }
-
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
-        {
-            popupProduct.IsOpen = true;
-            if (popupProduct.IsOpen == true)
-            {
-                EditProduct = (sender as Button).Tag as Product;
-                addProductControl.productName = EditProduct.Title;
-                addProductControl.id = EditProduct.Id;
-                addProductControl.buttonStatus = "Update";
-            }
-        }
-
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async Task DeleteProduct(Products product, int indexOf)
         {
             //Take the object and it's ID.
             //Create a product object with ID 
             //call the api for deleting the record
             // Remove from the observableCollection.
             //Product btn = (sender as Button).Tag;
-            Product productObject = (sender as Button).Tag as Product;
-            int indexOf = thisApp.productsCollection.IndexOf(productObject);
-            Products produts = new Products()
-            {
-                product = new Product()
-                {
-                    Id = productObject.Id
-                }
-            };
-            bool isCreated = ShopifyRequests.DeleteProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), produts);
+
+            bool isCreated = ShopifyRequests.DeleteProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), product);
             if (isCreated == true)
             {
                 thisApp.productsCollection.RemoveAt(indexOf);
             }
         }
+        private async Task GetProductById(string prodId)
+        {
+            product isCreated = new product();
+            isCreated = ShopifyRequests.GetProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), "https://trek-bikes.myshopify.com/admin/products/" + prodId + ".json");
+            if (isCreated != null)
+            {
+                product pros = new product()
+                {
+                    id = isCreated.id,
+                    title = isCreated.title
+                };
+                thisApp.productsCollection.Clear();
+                thisApp.productsCollection.Add(pros);
+            }
+        }
+        #endregion
+        #region Helper Methods
+        private async Task InitialServerCall()
+        {
+            var task1 = LoadProducts();
+            var task2 = CountProducts();
+            Task.WaitAll(task1,task2);
+        }
+        private void UpdateButtonStatus()
+        {
+            if (chkStatus.IsChecked == true)
+            {
+                btnAddOrUpdate.Content = "Add";
+            }
+            else if (!String.IsNullOrEmpty(txtProductName.Text) && chkStatus.IsChecked == false)
+            {
+                btnAddOrUpdate.Content = "Update";
+            }
+        }
+        //private void UpdateButtonStatus(bool status)
+        //{
+        //    if(!status)
+        //    {
+        //        this.Cursor = Cursors.Wait;
+        //        txtProcessing.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        this.Cursor = Cursors.IBeam;
+        //        txtProcessing.Visibility = Visibility.Collapsed;
+        //    }
+        //    txtProcessing.Text = "Processing. . .";
+        //    btnAddOrUpdate.IsEnabled = status;
+        //    btnRefresh.IsEnabled = status;
+        //    btnGetById.IsEnabled = status;
+        //}
+        #endregion
+        #region Events
+        private async void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            //UpdateButtonStatus(false);
+            await InitialServerCall();
+            //UpdateButtonStatus(true);
+        }
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            EditProduct = (sender as Button).Tag as product;
+            txtProductName.Text = EditProduct.title;
+            Id = EditProduct.id;
+            btnAddOrUpdate.Content = "Update";
+        }
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            product productObject = (sender as Button).Tag as product;
+            MessageBoxResult dialog;
+            dialog = MessageBox.Show("Do you want to delete record?", "Delete Record", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (dialog == MessageBoxResult.Yes)
+            {
+                int indexOf = thisApp.productsCollection.IndexOf(productObject);
+                Products produts = new Products()
+                {
+                    product = new product()
+                    {
+                        id = productObject.id
+                    }
+                };
+                await DeleteProduct(produts, indexOf);
+            }
+        }
+        private async void btnAddOrUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            //UpdateButtonStatus(false);
+            if (btnAddOrUpdate.Content == "Update")
+            {
+                int indexOf = thisApp.productsCollection.IndexOf(EditProduct);
+                Products products = new Products()
+                {
+                    product = new product()
+                    {
+                        id = Id,
+                        title = txtProductName.Text
+                    }
+                };
+                UpdateProduct(products, indexOf);
+            }
+            else
+            {
+                await CreateProduct();
+            }
+            //UpdateButtonStatus(true);
+        }
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await InitialServerCall();
+        }
+        private void chkStatus_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateButtonStatus();
+        }
+        private void txtProductName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateButtonStatus();
+        }
+        private async void btnGetById_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //UpdateButtonStatus(false);
+                string prodId = txtProductById.Text;
+                await GetProductById(prodId);
+                //UpdateButtonStatus(true);
+            }
+            catch(Exception s)
+            {
+
+            }
+        }
+        #endregion
     }
 }

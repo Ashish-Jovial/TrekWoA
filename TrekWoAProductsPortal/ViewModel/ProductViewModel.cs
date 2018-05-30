@@ -14,8 +14,8 @@ namespace TrekWoAProductsPortal.ViewModel
     public class ProductViewModel : INotifyPropertyChanged
     {
         App thisApp = (App)Application.Current;
-        private ObservableCollection<Product> _shopifyProductViewModel = new ObservableCollection<Product>();
-        public ObservableCollection<Product> ShopifyProductViewModel
+        private ObservableCollection<product> _shopifyProductViewModel = new ObservableCollection<product>();
+        public ObservableCollection<product> ShopifyProductViewModel
         {
             get { return _shopifyProductViewModel; }
             set
@@ -26,11 +26,11 @@ namespace TrekWoAProductsPortal.ViewModel
         }
         public ProductViewModel()
         {
-            List<Product> models = ShopifyRequests.GetAllProducts(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""));
+            List<product> models = ShopifyRequests.GetAllProducts(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""));
             if (models != null)
             {
-                List<Product> recrods = models as List<Product>;
-                ShopifyProductViewModel = new ObservableCollection<Product>();
+                List<product> recrods = models as List<product>;
+                ShopifyProductViewModel = new ObservableCollection<product>();
                 foreach (var record in recrods)
                 {
                     ShopifyProductViewModel.Add(record);

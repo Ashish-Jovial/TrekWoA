@@ -20,22 +20,22 @@ namespace TrekWoAProductsPortal.HelperClasses
         /// <param name="password">password used login in Shopify main portal</param>
         /// <param name="storeUrl">pass storeUrl created for the store Shopify main portal</param>
         /// <returns>Return list of products</returns>
-        public static List<TrekWoAProductsPortal.Model.Product> GetAllProducts(string apiKey, string password, string storeUrl)
+        public static List<TrekWoAProductsPortal.Model.product> GetAllProducts(string apiKey, string password, string storeUrl)
         {
-            List<TrekWoAProductsPortal.Model.Product> products = null;
+            List<TrekWoAProductsPortal.Model.product> products = null;
             try
             {
                 dynamic shopify = new Shopify.Api(apiKey, password, storeUrl);
                 var selectQuery = shopify.Products();
-                products = new List<Model.Product>();
+                products = new List<Model.product>();
                 if (selectQuery != null)
                 {
-                    products = new List<Model.Product>();
+                    products = new List<Model.product>();
                     foreach (var item in selectQuery.products)
                     {
-                        TrekWoAProductsPortal.Model.Product product = new TrekWoAProductsPortal.Model.Product();
-                        product.Id = Convert.ToString(item.id);
-                        product.Title = item.title;
+                        TrekWoAProductsPortal.Model.product product = new TrekWoAProductsPortal.Model.product();
+                        product.id = Convert.ToString(item.id);
+                        product.title = item.title;
                         products.Add(product);
                     }
                 }
@@ -55,16 +55,16 @@ namespace TrekWoAProductsPortal.HelperClasses
         /// <param name="password">password used login in Shopify main portal</param>
         /// <param name="storeUrl">pass storeUrl created for the store Shopify main portal</param>
         /// <returns>Return number of products available on Shopify</returns>
-        public static int GetProductCount(string apiKey, string password, string storeUrl)
+        public static int GetProductCount(string apiKey, string password, string storeUrl, string fullUrl)
         {
             int count = 0;
             try
             {
-                dynamic shopifyCount = new Shopify.Api(apiKey, password, storeUrl);
+                dynamic shopifyCount = new Shopify.Api(apiKey, password, storeUrl, fullUrl);
                 var CountQuery = shopifyCount.Products();
                 if (CountQuery != null)
                 {
-                    count = CountQuery;
+                    count = CountQuery.count;
                 }
             }
             catch (Exception x)
@@ -79,17 +79,20 @@ namespace TrekWoAProductsPortal.HelperClasses
         /// <param name="password">password used login in Shopify main portal</param>
         /// <param name="storeUrl">pass storeUrl created for the store Shopify main portal</param>
         /// <returns>Return a product based on product id, available on Shopify</returns>
-        public static TrekWoAProductsPortal.Model.Product GetProduct(string apiKey, string password, string storeUrl)
+        public static TrekWoAProductsPortal.Model.product GetProduct(string apiKey, string password, string storeUrl, string fullUrl = null)
         {
-            TrekWoAProductsPortal.Model.Product product = null;
+            TrekWoAProductsPortal.Model.product product = null;
             try
             {
-                dynamic shopifyProductSelected = new Shopify.Api(apiKey, password, storeUrl);
+                dynamic shopifyProductSelected = new Shopify.Api(apiKey, password, storeUrl, fullUrl);
                 var IsProductSelected = shopifyProductSelected.Products();
                 if (IsProductSelected != null)
                 {
-                    product = new Model.Product();
-                    product = IsProductSelected;
+                    product = new Model.product()
+                    {
+                        id = Convert.ToString(IsProductSelected.product.id),
+                        title = IsProductSelected.product.title
+                    };
                 }
             }
             catch (Exception ex)
@@ -111,7 +114,14 @@ namespace TrekWoAProductsPortal.HelperClasses
             try
             {
                 dynamic shopifyCreate = new Shopify.Api(apiKey, password, storeUrl);
-                var IsCreated = shopifyCreate.Products.Save(product);
+
+                Shopify.product n = new Shopify.product { id = product.product.id, title = product.product.title };
+
+                Shopify.Products p = new Shopify.Products
+                {
+                    product = n
+                };
+                var IsCreated = shopifyCreate.Products.Save(p);
                 {
                     if (IsCreated != null)
                     {
@@ -140,9 +150,16 @@ namespace TrekWoAProductsPortal.HelperClasses
             try
             {
                 dynamic shopifyUpdate = new Shopify.Api(apiKey, password, storeUrl);
-                var IsUpdated = shopifyUpdate.Products.Save(product);
+
+                Shopify.product n = new Shopify.product { id = product.product.id, title = product.product.title };
+
+                Shopify.Products p = new Shopify.Products
                 {
-                    if (IsUpdated != null)
+                    product = n
+                };
+                var IsUpdated = shopifyUpdate.Products.Save(p);
+                {
+                    if (IsUpdated!=null)
                     {
                         status = true;
                     }
@@ -166,8 +183,13 @@ namespace TrekWoAProductsPortal.HelperClasses
             bool status = false;
             try
             {
+                Shopify.product n = new Shopify.product { id = product.product.id, title = product.product.title };
+                Shopify.Products p = new Shopify.Products
+                {
+                    product = n
+                };
                 dynamic shopifyDelete = new Shopify.Api(apiKey, password, storeUrl);
-                var IsDeleted = shopifyDelete.Products.Delete(product);
+                var IsDeleted = shopifyDelete.Products.Delete(p);
                 {
                     if (IsDeleted != null)
                     {
