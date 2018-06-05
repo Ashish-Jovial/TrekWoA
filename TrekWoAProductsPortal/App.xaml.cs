@@ -14,9 +14,9 @@ namespace TrekWoAProductsPortal
     /// </summary>
     public partial class App : Application
     {
-        public readonly string stroe_url = "trek-bikes.myshopify.com";
-        public readonly string api_key = "67b9a85c8758934ab576f76e0daec9cf";
-        public readonly string password = "a5c2e67de6376e3cc76f54191155f93a";
+        public readonly string stroe_url = "ashishstoretrex.myshopify.com";
+        public readonly string api_key = "8859c541a708d5b191d215d6f98a0cf9";
+        public readonly string password = "6a1134f0d94c9f930a98444c322292bb";
         public product currentProduct;
         public System.Collections.ObjectModel.ObservableCollection<product> productsCollection = new System.Collections.ObjectModel.ObservableCollection<product>();
         public string GetFullUrl(string apiPath)
@@ -24,11 +24,11 @@ namespace TrekWoAProductsPortal
             string fullUrl = "";
             if(string.IsNullOrEmpty(apiPath))
             {
-                fullUrl = "trek-bikes.myshopify.com";
+                fullUrl = stroe_url;
             }
             else
             {
-                fullUrl = "trek-bikes.myshopify.com" + apiPath;
+                fullUrl = stroe_url + apiPath;
             }
             return fullUrl;
         }

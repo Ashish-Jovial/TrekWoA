@@ -20,19 +20,20 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Background="#E55428" Grid.ColumnSpan="2" Orientation="Vertical">
             <StackPanel Grid.Row="0" Background="#E55428" Grid.ColumnSpan="2" Orientation="Horizontal">
-                <!--<Button Margin="10" Tag="{Binding}" Content="Add Product" x:Name="btnAddProduct" Style="{StaticResource ActionButtons}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="50" Click="btnAddProduct_Click">
-                </Button>-->
-                <Button Margin="10" Tag="{Binding}" Content="Sync Products" x:Name="btnRefresh" Style="{StaticResource ActionButtons}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="50" Click="btnRefresh_Click">
+                <Button Margin="10" Tag="{Binding}" Content="Sync Products" x:Name="btnRefresh" 
+                        Style="{StaticResource ActionButtons}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="100" Height="50" Click="btnRefresh_Click">
                 </Button>
             </StackPanel>
 
             <Grid >
-                <TextBlock Margin="19,0,0,0" x:Name="txtCount" Tag="{Binding}" Visibility="Visible" Text="{Binding TotalProducts,Mode=OneWay}"
+                <TextBlock Margin="19,-15,0,0" x:Name="txtCount" Tag="{Binding}" Visibility="Visible" Text="{Binding TotalProducts,Mode=OneWay}"
                            HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="segoe UI" FontSize="15" Foreground="White" 
                            />
 
-                <TextBlock x:Name="txtProcessing" Tag="{Binding}" Visibility="Collapsed" Text="Prodcessing..." Grid.ColumnSpan="2" 
+                <TextBlock Margin="0,-15,0,0" x:Name="txtProcessing" Tag="{Binding}" Visibility="Collapsed" Text="hadf" Grid.ColumnSpan="2" 
                            HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="segoe UI" FontSize="15" Foreground="White"/>
+                
+                <ProgressBar Margin="0,18,0,0" Visibility="Collapsed" Height="10" x:Name="progress" Background="White" Foreground="#E55428" FlowDirection="LeftToRight" IsIndeterminate="True" ></ProgressBar>
             </Grid>
         </StackPanel>
         <!--<Popup StaysOpen="False" AllowsTransparency="True" Placement="Center" PopupAnimation="Fade" Name="popupProduct" IsOpen="False">
@@ -110,7 +111,7 @@
                 <TextBlock Margin="5" Style="{StaticResource ResourceKey=DataLabel}" Text="Product By ID :" FontSize="19" VerticalAlignment="Center" 
                        HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2"></TextBlock>
                 <TextBox Margin="5" x:Name="txtProductById" Grid.Row="0" Grid.Column="3" Text="{Binding Id, Mode=TwoWay}" Style="{StaticResource TextBoxProductStyle}"/>
-                <Button Margin="5" x:Name="btnGetById" Style="{StaticResource DeleteButtonStyle}" Content="Get Product" Grid.Row="1"  VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="3" Click="btnGetById_Click"/>
+                <Button Margin="5" x:Name="BtnGetById" Style="{StaticResource DeleteButtonStyle}" Content="Get Product" Grid.Row="1"  VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="3" Click="BtnGetById_Click"/>
             </Grid>
         </Border>
     </Grid>

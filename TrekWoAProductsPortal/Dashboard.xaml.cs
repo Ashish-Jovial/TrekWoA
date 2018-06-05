@@ -27,10 +27,11 @@ namespace TrekWoAProductsPortal
     {
         public string Id = "";
         product EditProduct = new product();
-        Window darkWindow = null;
+        //Window darkWindow = null;
         App thisApp = (App)Application.Current;
         public ObservableCollection<product> ProductsCollection
         { get { return thisApp.productsCollection; } }
+        
         #region Consturctor
         public Dashboard()
         {
@@ -38,15 +39,19 @@ namespace TrekWoAProductsPortal
             btnAddOrUpdate.Content = "Add";
         }
         #endregion
+
         #region API Calls
         private async Task CountProducts()
         {
+            UpdateProgress("Counting Products...", true);
             product product = new product();
-            int count = ShopifyRequests.GetProductCount(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), "https://trek-bikes.myshopify.com/admin/products/count.json");
+            int count = ShopifyRequests.GetProductCount(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), "https://ashishstoretrex.myshopify.com/admin/products/count.json");
             txtCount.Text = "Total Prducts : " + Convert.ToString(count);
+            UpdateProgress("Counting Products...", false);
         }
         private async Task LoadProducts()
         {
+            UpdateProgress("Getting Products...", true);
             List<product> newRecords = new List<product>();
 
             newRecords = ShopifyRequests.GetAllProducts(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""));
@@ -59,19 +64,25 @@ namespace TrekWoAProductsPortal
                     thisApp.productsCollection.Add(x);
                 }
             }
+            UpdateProgress("Completed.", false);
+            thisApp.productsCollection.OrderBy(v => v.title);
         }
-        private async Task UpdateProduct(Products product, int productIndex)
+        private void UpdateProduct(Products product, int productIndex)
         {
+            UpdateProgress("Updating product...", true);
             var updateRecrod = ShopifyRequests.UpdateProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), product);
-            if (updateRecrod != null)
+            if (updateRecrod)
             {
                 thisApp.productsCollection.RemoveAt(productIndex);
                 thisApp.productsCollection.Add(product.product);
+                thisApp.productsCollection.OrderBy(v => v.title);
                 //await InitialServerCall();
             }
+            UpdateProgress("Updated", false);
         }
-        private async Task CreateProduct()
+        private void CreateProduct()
         {
+            UpdateProgress("Creting product...", true);
             Products products = new Products()
             {
                 product = new product()
@@ -83,26 +94,26 @@ namespace TrekWoAProductsPortal
             if (isCreated == true)
             {
                 thisApp.productsCollection.Add(products.product);
+                thisApp.productsCollection.OrderBy(v => v.title);
             }
+            UpdateProgress("Created.", false);
         }
-        private async Task DeleteProduct(Products product, int indexOf)
+        private void DeleteProduct(Products product, int indexOf)
         {
-            //Take the object and it's ID.
-            //Create a product object with ID 
-            //call the api for deleting the record
-            // Remove from the observableCollection.
-            //Product btn = (sender as Button).Tag;
-
+            UpdateProgress("Deleting...", true);
             bool isCreated = ShopifyRequests.DeleteProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), product);
             if (isCreated == true)
             {
                 thisApp.productsCollection.RemoveAt(indexOf);
             }
+            thisApp.productsCollection.OrderBy(v => v.title);
+            UpdateProgress("Deleted", false);
         }
-        private async Task GetProductById(string prodId)
+        private void GetProductById(string prodId)
         {
+            UpdateProgress("Fetching Product...", true);
             product isCreated = new product();
-            isCreated = ShopifyRequests.GetProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), "https://trek-bikes.myshopify.com/admin/products/" + prodId + ".json");
+            isCreated = ShopifyRequests.GetProduct(thisApp.api_key, thisApp.password, thisApp.GetFullUrl(""), "https://ashishstoretrex.myshopify.com/admin/products/" + prodId + ".json");
             if (isCreated != null)
             {
                 product pros = new product()
@@ -112,15 +123,19 @@ namespace TrekWoAProductsPortal
                 };
                 thisApp.productsCollection.Clear();
                 thisApp.productsCollection.Add(pros);
+                thisApp.productsCollection.OrderBy(v => v.title);
             }
+            UpdateProgress("Completed", false);
         }
         #endregion
+
         #region Helper Methods
         private async Task InitialServerCall()
         {
-            var task1 = LoadProducts();
-            var task2 = CountProducts();
-            Task.WaitAll(task1,task2);
+            UpdateProgress("Syncing...", true);
+            await LoadProducts();
+            await CountProducts();
+            UpdateProgress("Completed", false);
         }
         private void UpdateButtonStatus()
         {
@@ -148,15 +163,14 @@ namespace TrekWoAProductsPortal
         //    txtProcessing.Text = "Processing. . .";
         //    btnAddOrUpdate.IsEnabled = status;
         //    btnRefresh.IsEnabled = status;
-        //    btnGetById.IsEnabled = status;
+        //    BtnGetById.IsEnabled = status;
         //}
         #endregion
+
         #region Events
         private async void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            //UpdateButtonStatus(false);
             await InitialServerCall();
-            //UpdateButtonStatus(true);
         }
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
@@ -180,13 +194,14 @@ namespace TrekWoAProductsPortal
                         id = productObject.id
                     }
                 };
-                await DeleteProduct(produts, indexOf);
+                DeleteProduct(produts, indexOf);
+                await CountProducts();
             }
         }
         private async void btnAddOrUpdate_Click(object sender, RoutedEventArgs e)
         {
-            //UpdateButtonStatus(false);
-            if (btnAddOrUpdate.Content == "Update")
+            string buttonContent = Convert.ToString(btnAddOrUpdate.Content);
+            if (buttonContent == "Update")
             {
                 int indexOf = thisApp.productsCollection.IndexOf(EditProduct);
                 Products products = new Products()
@@ -198,12 +213,41 @@ namespace TrekWoAProductsPortal
                     }
                 };
                 UpdateProduct(products, indexOf);
+                txtProductName.Text = String.Empty;
             }
             else
             {
-                await CreateProduct();
+                CreateProduct();
+                await CountProducts();
+                txtProductName.Text = String.Empty;
             }
-            //UpdateButtonStatus(true);
+        }
+        private void UpdateProgress(string v1, bool v2)
+        {
+            if (v2)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    txtProcessing.Visibility = Visibility.Visible;
+                    txtProcessing.Text = v1;
+                }));
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    progress.Visibility = Visibility.Visible;
+                }));
+            }
+            else
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    txtProcessing.Visibility = Visibility.Collapsed;
+                    txtProcessing.Text = v1;
+                }));
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    progress.Visibility = Visibility.Collapsed;
+                }));
+            }
         }
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -217,13 +261,13 @@ namespace TrekWoAProductsPortal
         {
             UpdateButtonStatus();
         }
-        private async void btnGetById_Click(object sender, RoutedEventArgs e)
+        private void BtnGetById_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 //UpdateButtonStatus(false);
                 string prodId = txtProductById.Text;
-                await GetProductById(prodId);
+                GetProductById(prodId);
                 //UpdateButtonStatus(true);
             }
             catch(Exception s)
